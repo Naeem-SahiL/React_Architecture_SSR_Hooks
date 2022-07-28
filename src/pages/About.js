@@ -1,4 +1,5 @@
 import React, { lazy, Suspense } from 'react'
+import ErrorBoundary from '../ErrorBoundary'
 // import One from './One'
 // import Three from './Three'
 // import Two from './Two'
@@ -13,11 +14,13 @@ function About() {
     <>
       <div>About</div>
       <Suspense fallback={<p>Loading...</p>}>
-        <One />
-        <Two />
-        <Three />
-      </Suspense>
+        <ErrorBoundary>
+          <One />
+        </ErrorBoundary>
+        <ErrorBoundary><Two /></ErrorBoundary>
+        <ErrorBoundary><Three /></ErrorBoundary>
 
+      </Suspense>
     </>
   )
 }
