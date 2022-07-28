@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Link, Routes, Route } from 'react-router-dom';
-import Home from './pages/Home'
-import Articles from './pages/Articles'
-import About from './pages/About'
+// import Home from './pages/Home'
+// import Articles from './pages/Articles'
+// import About from './pages/About'
+
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Articles = lazy(() => import('./pages/Articles'))
 
 function App() {
   return (
@@ -19,12 +23,14 @@ function App() {
           <Link to='/articles'>Articles</Link>
         </li>
       </ul>
+      <Suspense fallback={<p>Loading...</p>}>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/articles' element={<Articles />} />
+        </Routes>
+      </Suspense>
 
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/articles' element={<Articles />} />
-      </Routes>
     </>
   );
 }
