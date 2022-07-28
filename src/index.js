@@ -1,12 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals';
-
-
 import * as ReactDOMClient from 'react-dom/client';
+import { InitialDataContext } from './pages/InitialDataContext';
 
 
 const container = document.getElementById('root');
@@ -14,9 +12,11 @@ const container = document.getElementById('root');
 // Create *and* render a root with hydration.
 const app =
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <InitialDataContext.Provider value={(window && window.preLoadedData) || { _data: {} }}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </InitialDataContext.Provider>
   </React.StrictMode>;
 
 const root = ReactDOMClient.hydrateRoot(container, app);

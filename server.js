@@ -1,3 +1,4 @@
+import 'isomorphic-fetch';
 import express from 'express';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
@@ -7,6 +8,8 @@ import { StaticRouter } from 'react-router-dom/server'
 import App from './src/App';
 import { ServerStyleSheet } from 'styled-components'
 import { InitialDataContext } from './src/pages/InitialDataContext';
+
+global.window = {}
 
 const app = express();
 app.use(express.static('./build', { index: false }));
@@ -39,9 +42,11 @@ app.get('/*', async (req, res) => {
             )
     );
 
+    
     await Promise.all(contextObj._requests);
+    console.log('hello after requests')
     contextObj._isServerSide = false;
-    delete (contextObj._requests);
+    delete contextObj._requests;
 
     const reactApp = renderToString(
         <InitialDataContext.Provider value={contextObj}>
@@ -60,7 +65,7 @@ app.get('/*', async (req, res) => {
         }
         // const preloadedArticles = articles;
         return res.send(
-            data.replace('<div id="root"></div>', `<script>window.preLoadedData = ${JSON.stringify(contextObj)}</script><div id="root">${reactApp}</div>`)
+            data.replace('<div id="root"></div>', `<script>window.preloadedData = ${JSON.stringify(contextObj)}</script><div id="root">${reactApp}</div>`)
                 .replace('{{ styles }}', sheet.getStyleTags())
         )
     })

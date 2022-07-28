@@ -1,27 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { useDataSSR } from '../useDataSSR';
 
 const defined = typeof window !== "undefined"
 
-if (!defined)
-  global.window = {}
+// if (!defined)
+//   global.window = {}
 
 function Articles() {
-  const [articles, setArticles] = useState(window && window.preLoadedArticles);
-  const [show, setShow] = useState(false);
+  // const [articles, setArticles] = useState(window && window.preLoadedArticles);
+  // const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    if (window && !window.preLoadedArticles) {
-      console.log('loading articles from server')
-      fetch('/api/articles')
-        .then(res => res.json())
-        .then(data => setArticles(data))
-    }
+  const articles = useDataSSR('articles', () => {
+    console.log('loading articles from server')
+    return fetch('http://localhost:8080/api/articles')
+      .then(res => res.json())
+  })
 
-    setShow(true);
+  // useEffect(() => {
 
-  }, [])
 
-  if (!show) {
+  //   setShow(true);
+
+  // }, [])
+
+  if (false) {
     return null;
   }
 
