@@ -6,6 +6,7 @@ import fs from 'fs';
 import { StaticRouter } from 'react-router-dom/server'
 import App from './src/App';
 import { ServerStyleSheet } from 'styled-components'
+import { InitialDataContext } from './src/pages/InitialDataContext';
 
 const app = express();
 app.use(express.static('./build', { index: false }));
@@ -23,25 +24,43 @@ app.get('/api/articles', (req, res) => {
     res.json(loadedArticles)
 });
 
-app.get('/*', (req, res) => {
+app.get('/*', async (req, res) => {
     const sheet = new ServerStyleSheet()
+    const contextObj = { _isServerSide: true, _requests: [], _data: {} }
 
-    const reactApp = renderToString(
+    renderToString(
         sheet.collectStyles
-            (<StaticRouter location={req.url}>
-                <App />
-            </StaticRouter>
+            (
+                <InitialDataContext.Provider value={contextObj}>
+                    <StaticRouter location={req.url}>
+                        <App />
+                    </StaticRouter>
+                </InitialDataContext.Provider>
             )
     );
+
+    await Promise.all(contextObj._requests);
+    contextObj._isServerSide = false;
+    delete (contextObj._requests);
+
+    const reactApp = renderToString(
+        <InitialDataContext.Provider value={contextObj}>
+            <StaticRouter location={req.url}>
+                <App />
+            </StaticRouter>
+        </InitialDataContext.Provider>
+    );
+
+
 
     const file = path.resolve('./build/index.html');
     fs.readFile(file, 'utf-8', (err, data) => {
         if (err) {
             return res.status(500).send(err)
         }
-        const preloadedArticles = articles;
+        // const preloadedArticles = articles;
         return res.send(
-            data.replace('<div id="root"></div>', `<script>window.preLoadedArticles = ${JSON.stringify(preloadedArticles)}</script><div id="root">${reactApp}</div>`)
+            data.replace('<div id="root"></div>', `<script>window.preLoadedData = ${JSON.stringify(contextObj)}</script><div id="root">${reactApp}</div>`)
                 .replace('{{ styles }}', sheet.getStyleTags())
         )
     })
