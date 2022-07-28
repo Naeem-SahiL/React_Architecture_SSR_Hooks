@@ -10,6 +10,19 @@ import { ServerStyleSheet } from 'styled-components'
 const app = express();
 app.use(express.static('./build', { index: false }));
 
+const articles = [
+    { title: 'Article 1', author: 'author 1' },
+    { title: 'Article 2', author: 'author 2' },
+    { title: 'Article 3', author: 'author 3' },
+    { title: 'Article 4', author: 'author 4' },
+    { title: 'Article 5', author: 'author 5' },
+]
+
+app.get('/api/articles', (req, res) => {
+    const loadedArticles = articles;
+    res.json(loadedArticles)
+});
+
 app.get('/*', (req, res) => {
     const sheet = new ServerStyleSheet()
 
@@ -26,9 +39,9 @@ app.get('/*', (req, res) => {
         if (err) {
             return res.status(500).send(err)
         }
-
+        const preloadedArticles = articles;
         return res.send(
-            data.replace('<div id="root"></div>', `<div id="root">${reactApp}</div>`)
+            data.replace('<div id="root"></div>', `<script>window.preLoadedArticles = ${JSON.stringify(preloadedArticles)}</script><div id="root">${reactApp}</div>`)
                 .replace('{{ styles }}', sheet.getStyleTags())
         )
     })
