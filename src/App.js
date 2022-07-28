@@ -1,25 +1,93 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Link, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home'
+import Articles from './pages/Articles'
+import About from './pages/About'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <>
+      <ul>
+        <li>
+          <Link to='/'>Home</Link>
+        </li>
+        <li>
+          <Link to='/about'>About</Link>
+        </li>
+        <li>
+          <Link to='/articles'>Articles</Link>
+        </li>
+      </ul>
+
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/about' element={<About />} />
+        <Route path='/articles' element={<Articles />} />
+      </Routes>
+    </>
   );
 }
 
 export default App;
+// MobX State managent with context
+/* 
+  <MobxContextProvider>
+      <div className="App">
+        <h1>Hello Sate Management</h1>
+        <ConuterButtonMobx />
+      </div>
+    </MobxContextProvider>
+*/
+
+// Redux
+/*
+<Provider store={store}>
+      <div className="App">
+        <h1>Hello Sate Management</h1>
+        <ConuterButtonRedux />
+      </div>
+    </Provider>
+*/
+
+
+// UseRecoil
+/*
+<RecoilRoot>
+      <div className="App">
+        <DisplaySharedCount />
+        <h1>Hello Sate Management</h1>
+        <ConuterButtonRecoil />
+      </div>
+    </RecoilRoot>
+*/
+
+// Context provider
+/*
+<CounterProvider>
+      <div className="App">
+        <h1>Hello Sate Management</h1>
+        <ConuterButton />
+      </div>
+    </CounterProvider>
+*/
+
+
+// React Router Setup
+{/* <ul>
+<li>
+  <Link to='/'>Home</Link>
+</li>
+<li>
+  <Link to='/about'>About</Link>
+</li>
+<li>
+  <Link to='/articles'>Articles</Link>
+</li>
+</ul>
+
+<Routes>
+<Route path='/' element={<Home />} />
+<Route path='/about' element={<About />} />
+<Route path='/articles' element={<Articles />} />
+</Routes> */}
