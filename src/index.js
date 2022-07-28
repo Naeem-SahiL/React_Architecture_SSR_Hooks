@@ -12,14 +12,15 @@ const container = document.getElementById('root');
 // Create *and* render a root with hydration.
 const app =
   <React.StrictMode>
-    <InitialDataContext.Provider value={(window && window.preLoadedData) || { _data: {} }}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </InitialDataContext.Provider>
+    {/* <InitialDataContext.Provider value={(window && window.preLoadedData) || { _data: {} }}> */}
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+    {/* </InitialDataContext.Provider> */}
   </React.StrictMode>;
 
-const root = ReactDOMClient.hydrateRoot(container, app);
+const root = ReactDOMClient.createRoot(container);
+root.render(app)
 
 
 
